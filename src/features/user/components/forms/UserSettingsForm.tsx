@@ -17,13 +17,20 @@ import {
   ModalDialog,
   ModalClose,
   Stack,
+  Badge,
+  Chip,
 } from '@mui/joy';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { useState } from 'react';
 import { ChangePwDialog } from './ChangePwForm';
 import { ChangeEmailDialog } from './ChangeEmailForm';
+import { User } from '../../../../common/models/user';
+import { UserStatusChips } from '../userSettings/UserStatusChips';
+type UserSettingsFormProps = {
+  authUser: User;
+};
 
-export const UserSettingsForm = () => {
+export const UserSettingsForm = ({ authUser }: UserSettingsFormProps) => {
   const [showChangePwDialog, setShowChangePwDialog] = useState(false);
   const [showChangeEmailDialog, setShowChangeEmailDialog] = useState(false);
   const {
@@ -33,11 +40,8 @@ export const UserSettingsForm = () => {
   } = useForm<z.infer<typeof UserSettingsFormSchema>>({
     resolver: zodResolver(UserSettingsFormSchema),
     defaultValues: {
-      email: 'test@example.com',
-      cellPhone: '+1 (222)-333-4444',
-      country: 'United States',
-      firstName: 'Bobby',
-      lastName: 'Boi',
+      email: authUser.email,
+      displayName: authUser.friendlyName ?? authUser.email.split('@')[0],
     },
   });
 
@@ -80,40 +84,23 @@ export const UserSettingsForm = () => {
             User Settings
           </Typography>
           <Divider inset='none' />
-
-          <FormControl error={!!errors.firstName}>
-            <FormLabel>First Name</FormLabel>
-            <Controller name='firstName' control={control} render={({ field }) => <Input {...field} />} />
-            {errors.firstName && <FormHelperText>{errors.firstName.message}</FormHelperText>}
-          </FormControl>
-          <FormControl error={!!errors.lastName}>
-            <FormLabel>Last Name</FormLabel>
-            <Controller name='lastName' control={control} render={({ field }) => <Input {...field} />} />
-            {errors.lastName && <FormHelperText>{errors.lastName.message}</FormHelperText>}
+          <FormControl error={!!errors.displayName}>
+            <FormLabel>Display name</FormLabel>
+            <Controller name='displayName' control={control} render={({ field }) => <Input {...field} />} />
+            {errors.displayName && <FormHelperText>{errors.displayName.message}</FormHelperText>}
           </FormControl>
           <FormControl error={!!errors.email}>
             <FormLabel>Email</FormLabel>
             <Controller name='email' control={control} render={({ field }) => <Input disabled {...field} />} />
             {errors.email && <FormHelperText>{errors.email.message}</FormHelperText>}
           </FormControl>
-
-          <FormControl error={!!errors.cellPhone}>
-            <FormLabel>Cell Phone</FormLabel>
-            <Controller name='cellPhone' control={control} render={({ field }) => <Input {...field} />} />
-            {errors.cellPhone && <FormHelperText>{errors.cellPhone.message}</FormHelperText>}
-          </FormControl>
-
-          <FormControl error={!!errors.country}>
-            <FormLabel>Country</FormLabel>
-            <Controller name='country' control={control} render={({ field }) => <Input {...field} />} />
-            {errors.country && <FormHelperText>{errors.country.message}</FormHelperText>}
-          </FormControl>
-
           <Stack width={'200px'} alignItems={'start'} paddingY={5} gap={3}>
+            <UserStatusChips pwResetToken={!!authUser.pwResetToken} emailVerified={authUser.emailVerified} />
             <Button
               fullWidth
               size='sm'
               color='neutral'
+              disabled={!authUser.emailVerified}
               onClick={() => {
                 setShowChangeEmailDialog(true);
               }}
@@ -125,6 +112,7 @@ export const UserSettingsForm = () => {
               fullWidth
               size={'sm'}
               color='neutral'
+              disabled={!authUser.emailVerified || !!authUser.pwResetToken}
               onClick={() => {
                 setShowChangePwDialog(true);
               }}

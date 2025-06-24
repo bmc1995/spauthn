@@ -1,10 +1,13 @@
 import { Sheet } from '@mui/joy';
 import { UserSettingsForm } from '../forms/UserSettingsForm';
+import { authProvider } from '../../../../app/routing/authproviders';
 
 export default function UserSettings() {
-  return (
-    <Sheet sx={{ xs: { justifyContent: 'center' } }}>
-      <UserSettingsForm />
-    </Sheet>
-  );
+  const authUser = authProvider.getUser();
+  if (authUser)
+    return (
+      <Sheet sx={{ xs: { justifyContent: 'center' } }}>
+        <UserSettingsForm authUser={authUser} />
+      </Sheet>
+    );
 }

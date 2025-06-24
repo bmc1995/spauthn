@@ -1,11 +1,8 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 const UserSettingsSchema = z.object({
   email: z.string().email(),
-  cellPhone: z.string(),
-  country: z.string(),
-  firstName: z.string(),
-  lastName: z.string(),
+  displayName: z.string() || z.null(),
 });
 
 export default UserSettingsSchema;
