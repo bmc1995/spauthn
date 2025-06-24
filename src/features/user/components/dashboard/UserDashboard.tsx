@@ -5,6 +5,9 @@ import UserUploads from '../upload/UserUploads';
 import { AdminPanel } from '../admin/adminPanel';
 import { useRBAC } from '../../../rbac/useRbac';
 import { Role } from '../../../../common/models/role';
+import { authProvider } from '../../../../app/routing/authproviders';
+
+const authUser = authProvider.getUser();
 
 export default function UserDashboard() {
   return (
@@ -27,7 +30,7 @@ export default function UserDashboard() {
         )}
       </TabList>
       <TabPanel aria-label='User profile panel' value={0}>
-        <UserProfile />
+        <UserProfile authUser={authUser!} />
       </TabPanel>
       <TabPanel aria-label='User settings panel' value={1}>
         <UserSettings />

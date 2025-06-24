@@ -12,3 +12,10 @@ export function protectedLoader({ request }: LoaderFunctionArgs) {
   console.log(`User authenticated. Proceeding to protected route.`);
   return { authUser };
 }
+export function indexLoader() {
+  const authUser = authProvider.getUser();
+  if (!authUser) {
+    return redirect(`/auth`);
+  }
+  return redirect('/dashboard');
+}

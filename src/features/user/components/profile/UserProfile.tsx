@@ -1,7 +1,8 @@
-import { Email, MyLocation, Phone } from '@mui/icons-material';
+import { Email } from '@mui/icons-material';
 import { AspectRatio, Avatar, Box, Card, CardContent, CardOverflow, Divider, Grid, Stack, Typography } from '@mui/joy';
 import { useMemo } from 'react';
 import { generateUUID } from '../../../../common/utils/generateUUID';
+import { User } from '../../../../common/models/user';
 
 function CardGenerator(images: { desc: string; src: string; name: string }[]) {
   return (
@@ -48,7 +49,11 @@ function CardGenerator(images: { desc: string; src: string; name: string }[]) {
   );
 }
 
-export default function UserProfile() {
+type UserProfileProps = {
+  authUser: User;
+};
+
+export default function UserProfile({ authUser }: UserProfileProps) {
   const images = useMemo(() => {
     return Array<{ src: string; name: string; desc: string }>(10).fill({
       src: '/vite.svg',
@@ -72,17 +77,11 @@ export default function UserProfile() {
             alt='ACCOUNT NAME'
           />
           <Typography aria-label='full name' fontSize={{ sm: 24, md: 34 }}>
-            Testerson McTester
+            {authUser.friendlyName || authUser.email.split('@')[0]}
           </Typography>
           <Stack direction={{ sm: 'column' }} justifyContent={'center'} alignItems={'center'} gap={2}>
             <Typography aria-label='email address' startDecorator={<Email />}>
-              test@example.com
-            </Typography>
-            <Typography aria-label='phone number' startDecorator={<Phone />}>
-              +1 (555) 555-5555
-            </Typography>
-            <Typography aria-label='country' startDecorator={<MyLocation />}>
-              United States
+              {authUser.email}
             </Typography>
           </Stack>
         </Box>
