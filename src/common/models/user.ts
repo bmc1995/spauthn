@@ -1,15 +1,16 @@
+import { ZodBoolean } from 'zod/v4';
 import { Image } from './image';
-import { Role } from './role';
+ZodBoolean;
 
 export interface User {
-  id: number;
+  id: string;
   email: string;
-  newEmail: string | null;
-  role: Role;
-  firstName: string;
-  lastName: string;
-  activatedAt: string | null;
-  profilePicture: Image | null;
+  pwResetToken: string | null;
+  friendlyName: string | null;
+  isActive: boolean;
+  isAdmin: boolean;
+  emailVerified: boolean;
   createdAt: Date;
   updatedAt: Date;
+  deletedAi: Date | null;
 }

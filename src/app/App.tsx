@@ -16,7 +16,7 @@ function App() {
         <NetworkDetector>
           <ErrorBoundary fallback={<h1>Something went wrong</h1>}>
             <ToastContainer />
-            <RouterProvider router={router} fallbackElement={<p>...</p>} />
+            <RouterProvider router={router} />
           </ErrorBoundary>
         </NetworkDetector>
       </CssBaseline>

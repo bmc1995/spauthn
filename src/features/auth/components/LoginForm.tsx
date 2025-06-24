@@ -37,13 +37,7 @@ export const LoginForm = () => {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-    },
-  });
+  } = useForm({ resolver: zodResolver(formSchema), defaultValues: { email: '', password: '' } });
 
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = data => {
     routerSubmit({ ...data, from }, { method: 'post', encType: 'application/json' });
@@ -63,10 +57,7 @@ export const LoginForm = () => {
         <Box
           component={'form'}
           width={'300px'}
-          sx={{
-            display: 'grid',
-            gap: '1.5rem',
-          }}
+          sx={{ display: 'grid', gap: '1.5rem' }}
           onSubmit={e => {
             void handleSubmit(onSubmit)(e);
           }}

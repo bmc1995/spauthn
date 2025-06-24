@@ -1,11 +1,14 @@
 import { LoaderFunctionArgs, redirect } from 'react-router-dom';
-import { fakeAuthProvider } from './fakeauthprovider';
+import { authProvider } from './authproviders';
 
 export function protectedLoader({ request }: LoaderFunctionArgs) {
-  if (fakeAuthProvider.getUser() == null) {
+  const authUser = authProvider.getUser();
+  if (!authUser) {
     const params = new URLSearchParams();
     params.set('from', new URL(request.url).pathname);
-    return redirect('/auth?' + params.toString());
+    console.log(`User not authenticated. Redirecting to login at /auth`);
+    return redirect(`/auth?${params.toString()}`);
   }
-  return null;
+  console.log(`User authenticated. Proceeding to protected route.`);
+  return { authUser };
 }

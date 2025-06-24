@@ -37,10 +37,10 @@ export const authSlice = createSlice({
      * Action for logging out a user.
      * @returns The authentication state with the token and user set to null.
      */
-    logout: () => {
+    logout: (state, action: PayloadAction<AuthState>) => {
       return {
-        token: null,
-        user: null,
+        ...state,
+        ...action.payload,
       };
     },
     /**

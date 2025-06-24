@@ -1,24 +1,24 @@
 import { LoaderFunctionArgs, Route, redirect } from 'react-router-dom';
 import { LoginPage } from './pages/LoginPage';
 import { SignUpPage } from './pages/SignUpPage';
-import { fakeAuthProvider } from '../../app/routing/fakeauthprovider';
+import { authProvider } from '../../app/routing/authproviders';
 
 async function loginAction({ request }: LoaderFunctionArgs) {
   const { email, password, from } = (await request.json()) as { email: string; password: string; from: string };
   try {
-    await fakeAuthProvider.signin({ email, password });
+    await authProvider.signin({ email, password });
   } catch (error) {
     return error;
   }
   return redirect(from || '/protected');
 }
 async function logoutAction() {
-  await fakeAuthProvider.signout();
+  await authProvider.signout();
   return redirect('/');
 }
 
 function loginLoader() {
-  const user = !!fakeAuthProvider.getUser();
+  const user = !!authProvider.getUser();
   if (user) return redirect('/protected');
   return null;
 }
