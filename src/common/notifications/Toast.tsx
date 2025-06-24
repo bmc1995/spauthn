@@ -1,8 +1,8 @@
-import { useRef, useEffect, useState, useCallback } from "react";
-import { useDispatch } from "react-redux";
-import { ToastAlert, removeToast } from "../../app/redux/slices/toastSlice";
-import { Alert } from "@mui/joy";
-import { Close } from "@mui/icons-material";
+import { useRef, useEffect, useState, useCallback } from 'react';
+import { useDispatch } from 'react-redux';
+import { ToastAlert, removeToast } from '../../app/redux/slices/toastSlice';
+import { Alert } from '@mui/joy';
+import { Close } from '@mui/icons-material';
 
 export const Toast = ({ toastProps }: { toastProps: ToastAlert }) => {
   const { msg, color, variant, id, duration = 0 } = toastProps;
@@ -10,8 +10,8 @@ export const Toast = ({ toastProps }: { toastProps: ToastAlert }) => {
   const [opacity, setOpacity] = useState(0);
   const dispatch = useDispatch();
 
-  const hideTimerIdRef = useRef<number | NodeJS.Timeout | null>(null);
-  const removeTimerIdRef = useRef<number | NodeJS.Timeout | null>(null);
+  const hideTimerIdRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const removeTimerIdRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleClickRemove = useCallback(() => {
     if (hideTimerIdRef.current) clearTimeout(hideTimerIdRef.current);
@@ -42,29 +42,29 @@ export const Toast = ({ toastProps }: { toastProps: ToastAlert }) => {
       endDecorator={
         <Close
           onClick={handleClickRemove}
-          cursor={"pointer"}
-          accentHeight={"240px"}
+          cursor={'pointer'}
+          accentHeight={'240px'}
           tabIndex={0}
-          role="button"
-          aria-description="Close Alert"
+          role='button'
+          aria-description='Close Alert'
           sx={{
-            border: "1px solid gray",
-            borderRadius: "2px",
-            ":hover": { color: "ButtonText" },
-            ":active": { borderColor: "ButtonFace" },
+            border: '1px solid gray',
+            borderRadius: '2px',
+            ':hover': { color: 'ButtonText' },
+            ':active': { borderColor: 'ButtonFace' },
           }}
         />
       }
       style={{
         opacity,
-        transitionProperty: "opacity",
-        transitionDuration: "0.3s",
-        transitionTimingFunction: "ease-in-out",
+        transitionProperty: 'opacity',
+        transitionDuration: '0.3s',
+        transitionTimingFunction: 'ease-in-out',
       }}
       color={color}
       variant={variant}
-      role={color === "danger" ? "alert" : "status"}
-      aria-live={color === "danger" ? "assertive" : "polite"}
+      role={color === 'danger' ? 'alert' : 'status'}
+      aria-live={color === 'danger' ? 'assertive' : 'polite'}
     >
       {msg}
     </Alert>

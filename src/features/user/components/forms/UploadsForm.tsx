@@ -1,9 +1,13 @@
-import { useForm, Controller, FieldValues } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { AspectRatio, Box, Button, FormControl, Input, Stack } from '@mui/joy';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Clear, UploadFile } from '@mui/icons-material';
 import React, { useRef } from 'react';
+
+const uploadsFormSchema = z.object({ imageFile: z.any().optional() });
+
+type UploadsFormValues = z.infer<typeof uploadsFormSchema>;
 
 export const UploadsForm = () => {
   const {
@@ -12,15 +16,10 @@ export const UploadsForm = () => {
     formState: { errors },
     watch,
     reset,
-  } = useForm({
-    resolver: zodResolver(z.string().min(3)),
-    defaultValues: {
-      imageFile: '',
-    },
-  });
-  const previewImgRef = useRef() as React.MutableRefObject<HTMLImageElement>;
+  } = useForm<UploadsFormValues>({ resolver: zodResolver(uploadsFormSchema), defaultValues: { imageFile: '' } });
+  const previewImgRef = useRef<HTMLImageElement>(null) as React.RefObject<HTMLImageElement>;
 
-  function onSubmit(data: FieldValues) {
+  function onSubmit(data: UploadsFormValues) {
     console.log(data);
   }
   function inputClick() {
@@ -30,11 +29,12 @@ export const UploadsForm = () => {
   /**
    * Handles setting and clearing the preview image.
    * The elementRef parameter holds a ref pointing to the target HTML Image Element
-   * @param elementRef Ref pointing to an HTML image element
+   * @param elementRef Ref pointing to an HTML image element (may be null)
    * @param file File object.  Clears `elementRef.current.src` if undefined
    * @returns
    */
-  function handlePreview(elementRef: React.MutableRefObject<HTMLImageElement>, file: File | undefined) {
+  function handlePreview(elementRef: React.RefObject<HTMLImageElement>, file: File | undefined) {
+    if (!elementRef.current) return;
     if (!file || !file.type.startsWith('image/')) {
       //TODO add placeholder img
       return (elementRef.current.src = '');
@@ -49,11 +49,7 @@ export const UploadsForm = () => {
         <AspectRatio
           variant='outlined'
           ratio='4/3'
-          sx={{
-            width: { xs: 250, sm: 300, md: 500 },
-            bgcolor: 'background.level2',
-            borderRadius: 'md',
-          }}
+          sx={{ width: { xs: 250, sm: 300, md: 500 }, bgcolor: 'background.level2', borderRadius: 'md' }}
         >
           <img ref={previewImgRef} src={watch('imageFile')} alt='Selected image preview' />
         </AspectRatio>
