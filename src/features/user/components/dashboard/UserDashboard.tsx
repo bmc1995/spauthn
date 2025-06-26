@@ -5,11 +5,11 @@ import UserUploads from '../upload/UserUploads';
 import { AdminPanel } from '../admin/adminPanel';
 import { useRBAC } from '../../../rbac/useRbac';
 import { Role } from '../../../../common/models/role';
-import { authProvider } from '../../../../app/routing/authproviders';
-
-const authUser = authProvider.getUser();
+import { useLoaderData } from 'react-router-dom';
+import { ProtectedLoaderData } from '../../../../app/routing/authLoader';
 
 export default function UserDashboard() {
+  const { authUser } = useLoaderData<ProtectedLoaderData>();
   return (
     <Tabs defaultValue={0} aria-label='User dashboard tabs' sx={{ minHeight: '100vh' }}>
       <TabList variant='soft' underlinePlacement='bottom'>
@@ -30,17 +30,17 @@ export default function UserDashboard() {
         )}
       </TabList>
       <TabPanel aria-label='User profile panel' value={0}>
-        <UserProfile authUser={authUser!} />
+        <UserProfile authUser={authUser} />
       </TabPanel>
       <TabPanel aria-label='User settings panel' value={1}>
-        <UserSettings />
+        <UserSettings authUser={authUser} />
       </TabPanel>
       <TabPanel aria-label='User uploads panel' value={2}>
         <UserUploads />
       </TabPanel>
       {useRBAC(
         <TabPanel aria-label='Admin panel' value={3}>
-          <AdminPanel />
+          <AdminPanel authUser={authUser} />
         </TabPanel>,
         [Role.ADMIN],
       )}

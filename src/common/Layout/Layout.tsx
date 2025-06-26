@@ -14,7 +14,7 @@ export const Layout = () => {
       <Main>
         <Outlet />
       </Main>
-      <Footer>Vreact Starter &copy;2023</Footer>
+      <Footer>Admin Portal &copy;2025</Footer>
     </Box>
   );
 };

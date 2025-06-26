@@ -1,6 +1,8 @@
 import { LoaderFunctionArgs, redirect } from 'react-router-dom';
 import { authProvider } from './authproviders';
 
+export type ProtectedLoaderData = typeof protectedLoader;
+
 export function protectedLoader({ request }: LoaderFunctionArgs) {
   const authUser = authProvider.getUser();
   if (!authUser) {
@@ -14,8 +16,5 @@ export function protectedLoader({ request }: LoaderFunctionArgs) {
 }
 export function indexLoader() {
   const authUser = authProvider.getUser();
-  if (!authUser) {
-    return redirect(`/auth`);
-  }
-  return redirect('/dashboard');
+  return redirect(authUser ? '/dashboard' : '/auth');
 }

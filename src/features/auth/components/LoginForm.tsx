@@ -16,7 +16,7 @@ import {
 } from '@mui/joy';
 import { InfoOutlined } from '@mui/icons-material';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm, SubmitHandler, Controller, FieldError } from 'react-hook-form';
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 
 import { SolidConnectBtn } from '../../../common/Buttons/SolidConnectBtn';
 import { GoogleSignInBtn } from '../../../common/Buttons/GoogleSignInBtn';
@@ -31,21 +31,27 @@ import { dispatchToast } from '../../../common/notifications/utils/dispatchToast
 export const LoginForm = () => {
   const from = new URLSearchParams(useLocation().search).get('from') || '/protected';
   const routerSubmit = useSubmit();
-  const serverErrors = useActionData() as FieldError | undefined;
+  const resData = useActionData();
   const [showForgotModal, setShowForgotModal] = useState<boolean>(false);
+  const [serverError, setServerError] = useState<{ success: false; message: string }>();
   const {
     handleSubmit,
     control,
     formState: { errors },
   } = useForm({ resolver: zodResolver(formSchema), defaultValues: { email: '', password: '' } });
 
+  useEffect(() => {
+    console.log(resData);
+
+    if (resData?.message) {
+      setServerError(resData);
+      dispatchToast(resData.message, 'danger');
+    }
+  }, [resData]);
+
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = data => {
     routerSubmit({ ...data, from }, { method: 'post', encType: 'application/json' });
   };
-
-  useEffect(() => {
-    serverErrors?.message && dispatchToast(serverErrors.message, 'danger');
-  }, [serverErrors]);
 
   return (
     <Card>
@@ -62,8 +68,9 @@ export const LoginForm = () => {
             void handleSubmit(onSubmit)(e);
           }}
         >
-          {serverErrors && <Typography color='danger'>{serverErrors.message}</Typography>}
+          {serverError?.message ? <Typography color='danger'>{serverError.message}</Typography> : null}
           <input type='hidden' name='redirectTo' value={from}></input>
+
           <FormControl error={!!errors.email}>
             <FormLabel>Email Address</FormLabel>
             <Controller
@@ -74,6 +81,7 @@ export const LoginForm = () => {
             />
             {errors.email && <FormHelperText>{errors.email.message?.toString()}</FormHelperText>}
           </FormControl>
+
           <FormControl error={!!errors.password}>
             <FormLabel>Password</FormLabel>
             <Controller
@@ -84,6 +92,7 @@ export const LoginForm = () => {
             />
             {errors.password && <FormHelperText>{errors.password.message?.toString()}</FormHelperText>}
           </FormControl>
+
           <CardActions buttonFlex={1} sx={{ gridColumn: '1/-1' }}>
             <Button variant='outlined' type='submit'>
               Submit

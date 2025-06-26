@@ -6,14 +6,14 @@ import { authProvider } from '../../app/routing/authproviders';
 async function loginAction({ request }: LoaderFunctionArgs) {
   const { email, password, from } = (await request.json()) as { email: string; password: string; from: string };
   try {
-    await authProvider.signin({ email, password });
+    await authProvider.signIn({ email, password });
   } catch (error) {
     return error;
   }
   return redirect(from || '/protected');
 }
 async function logoutAction() {
-  await authProvider.signout();
+  await authProvider.signOut();
   return redirect('/');
 }
 
