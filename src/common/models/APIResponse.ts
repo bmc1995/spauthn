@@ -1,6 +1,6 @@
 import { User } from './user';
 
-export type APIResponse<Data, Error> = {
+type APIResponse<Data, Error> = {
   data: Data | null;
   error: Error | null;
 };
@@ -13,5 +13,15 @@ export type AuthResponse = APIResponse<
   {
     message: string;
     code?: string;
+  }
+>;
+
+export type CreateAccountResponse = APIResponse<
+  {
+    email: string;
+    message: string;
+  },
+  {
+    message: string;
   }
 >;

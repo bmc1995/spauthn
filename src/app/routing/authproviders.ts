@@ -3,7 +3,6 @@ import { login, logout } from '../redux/slices/authSlice';
 import * as authLocalStorage from '../../features/auth/utils/authLocalStorage';
 import store from '../redux/store';
 import { APIRequest } from '../../common/notifications/utils/requests';
-import { redirect } from 'react-router-dom';
 import { dispatchToast } from '../../common/notifications/utils/dispatchToast';
 
 interface AuthProvider {
@@ -21,6 +20,7 @@ export const authProvider: AuthProvider = {
     }
     return null;
   },
+
   async signIn({ email, password }: { email: string; password: string }) {
     const response = await APIRequest.Auth.login({ email, password });
     if (!response?.data) {
@@ -34,23 +34,9 @@ export const authProvider: AuthProvider = {
     store.dispatch(login({ token, user }));
     dispatchToast('Login Success!', 'success');
   },
+
   async signOut() {
     authLocalStorage.removeAuthState();
     store.dispatch(logout({ token: null, user: null }));
   },
 };
-
-// const response = await fetch('http://localhost:3000/opeu/authn', {
-//   method: 'POST',
-//   headers: { 'Content-Type': 'application/json' },
-//   body: JSON.stringify({ username: email, password }),
-// });
-// if (!response.ok) {
-//   console.log(`Response:`, response);
-
-//   throw new Error('Invalid credentials');
-// }
-// const data = await response.json();
-// const token = crypto.getRandomValues(new Uint32Array(1))[0].toString(16);
-// authLocalStorage.saveAuthState({ token, user: data.user });
-// store.dispatch(login({ token, user: data.user }));

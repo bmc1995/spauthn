@@ -1,5 +1,5 @@
-import { Person, LogoutRounded, LoginRounded } from '@mui/icons-material';
-import { ListItem, ListItemButton } from '@mui/joy';
+import { Person, LogoutRounded, LoginRounded, Dashboard, DashboardRounded } from '@mui/icons-material';
+import { ListItem, ListItemButton, Typography } from '@mui/joy';
 import { useLinkClickHandler, useSubmit } from 'react-router-dom';
 
 interface NavigationBarProps {
@@ -25,7 +25,10 @@ export default function NavigationBarUserCntrls({ authenticated }: NavigationBar
             onClick={personClickHandler}
             aria-label='Profile'
           >
-            <Person />
+            <DashboardRounded titleAccess='Dashboard' />
+            <Typography sx={{ fontSize: { md: 14, lg: 16 }, display: { xs: 'none', md: 'initial' } }}>
+              Dashboard
+            </Typography>
           </ListItemButton>
         </ListItem>
         <ListItem sx={{ marginY: 'auto' }}>
@@ -37,7 +40,10 @@ export default function NavigationBarUserCntrls({ authenticated }: NavigationBar
             onClick={logoutClickHandler}
             aria-label='Logout'
           >
-            <LogoutRounded />
+            <LogoutRounded titleAccess='Logout' />
+            <Typography sx={{ fontSize: { md: 14, lg: 16 }, display: { xs: 'none', md: 'initial' } }}>
+              Logout
+            </Typography>
           </ListItemButton>
         </ListItem>
       </>
@@ -53,7 +59,8 @@ export default function NavigationBarUserCntrls({ authenticated }: NavigationBar
           onClick={loginClickHandler}
           aria-label='Login'
         >
-          <LoginRounded />
+          <LoginRounded titleAccess='Login' />
+          <Typography sx={{ fontSize: { md: 14, lg: 16 } }}>Login</Typography>
         </ListItemButton>
       </ListItem>
     );

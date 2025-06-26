@@ -1,11 +1,12 @@
 import axios from 'axios';
-import { APIResponse, AuthResponse } from '../../models/APIResponse';
+import { AuthResponse, CreateAccountResponse } from '../../models/APIResponse';
 
 const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
 const routes = {
   auth: {
     login: `${baseURL}/opeu/authn`,
     logout: `${baseURL}/opeu/authn/logout`,
+    createAccount: `${baseURL}/users/create`,
   },
 };
 export class APIRequest {
@@ -26,6 +27,19 @@ export class APIRequest {
       } catch (error) {
         console.log(error);
         throw new Error('Logout failed');
+      }
+    },
+    createAccount: async (data: {
+      email: string;
+      password: string;
+      displayName: string;
+    }): Promise<CreateAccountResponse> => {
+      try {
+        const response = await axios.post<CreateAccountResponse>(routes.auth.createAccount, data);
+        return response.data;
+      } catch (error: any) {
+        console.log(error);
+        throw new Error(error.response?.data?.message || 'Account creation failed');
       }
     },
   };

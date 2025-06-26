@@ -16,7 +16,7 @@ function CardGenerator(images: { desc: string; src: string; name: string }[]) {
     >
       {images.map(({ desc, src, name }) => (
         <Grid xs={12} sm={6} md={4} lg={3} key={generateUUID()}>
-          <Card variant='outlined' sx={{ width: '300px', margin: 'auto' }}>
+          <Card variant='outlined' sx={{ width: { xs: '200px', md: '300px' }, margin: 'auto' }}>
             <CardOverflow>
               <AspectRatio ratio='1'>
                 <img src={src} loading='lazy' alt={desc} />

@@ -14,18 +14,16 @@ import {
   Modal,
   ModalDialog,
 } from '@mui/joy';
+import { z } from 'zod';
+import formSchema from '../utils/zod/LoginSchema';
 import { InfoOutlined } from '@mui/icons-material';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
-
-import { SolidConnectBtn } from '../../../common/Buttons/SolidConnectBtn';
-import { GoogleSignInBtn } from '../../../common/Buttons/GoogleSignInBtn';
-import { CreateAccountBtn } from '../../../common/Buttons/CreateAccountBtn';
-import formSchema from '../utils/zod/LoginSchema';
-import { useEffect, useState } from 'react';
-import { ForgotPasswordForm } from './ForgotPasswordForm';
-import { z } from 'zod';
 import { useActionData, useLocation, useSubmit } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+
+import { CreateAccountBtn } from '../../../common/Buttons/CreateAccountBtn';
+import { ForgotPasswordForm } from './ForgotPasswordForm';
 import { dispatchToast } from '../../../common/notifications/utils/dispatchToast';
 
 export const LoginForm = () => {
@@ -112,8 +110,6 @@ export const LoginForm = () => {
         <Divider inset='none'>OR</Divider>
         <Stack spacing={1} justifyContent={'space-around'}>
           <CreateAccountBtn to='/auth/signup' />
-          <SolidConnectBtn />
-          <GoogleSignInBtn />
         </Stack>
       </CardContent>
       <Modal
