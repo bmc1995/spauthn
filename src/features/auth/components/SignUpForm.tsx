@@ -13,37 +13,44 @@ import {
   FormHelperText,
   FormLabel,
   Input,
-  Select,
   Stack,
   Typography,
 } from '@mui/joy';
 
 import formSchema from '../utils/zod/SignupSchema';
-import { generateOptionsFromEnumRHF } from '../utils/generateOptionsFromEnum';
 import { z } from 'zod';
 import SignupFormSchema from '../utils/zod/SignupSchema';
-import { useLinkClickHandler } from 'react-router-dom';
+import { useLinkClickHandler, useNavigate } from 'react-router-dom';
+import { APIRequest } from '../../../common/notifications/utils/requests';
+import { dispatchToast } from '../../../common/notifications/utils/dispatchToast';
 
 export const SignUpForm = () => {
+  const navigator = useNavigate();
   const {
     handleSubmit,
     control,
     formState: { errors },
+    reset,
   } = useForm<z.infer<typeof SignupFormSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: '',
-      cellPhone: '',
-      country: '',
       confirmPassword: '',
       password: '',
-      firstName: '',
-      lastName: '',
+      displayName: '',
     },
   });
 
   const onSubmit: SubmitHandler<z.infer<typeof SignupFormSchema>> = data => {
-    console.log(data);
+    APIRequest.Auth.createAccount(data)
+      .then(res => {
+        if (res.data) {
+          dispatchToast(res.data.message, 'success');
+          reset();
+          navigator('/');
+        }
+      })
+      .catch(err => dispatchToast(err.message, 'danger'));
   };
 
   const cancelClick = useLinkClickHandler('/');
@@ -80,6 +87,16 @@ export const SignUpForm = () => {
               </FormHelperText>
             )}
           </FormControl>
+          <FormControl error={!!errors.displayName}>
+            <FormLabel>Display Name</FormLabel>
+            <Controller name='displayName' control={control} render={({ field }) => <Input {...field} />} />
+            {errors.displayName && (
+              <FormHelperText>
+                <InfoOutlined />
+                {errors.displayName.message?.toString()}
+              </FormHelperText>
+            )}
+          </FormControl>
           <Stack sx={{ gridColumn: '1' }} justifyContent={'space-between'}>
             <FormControl error={!!errors.password}>
               <FormLabel>Create Password</FormLabel>
@@ -110,41 +127,6 @@ export const SignUpForm = () => {
               )}
             </FormControl>
           </Stack>
-          <Divider sx={{ gridColumn: '1/-1' }}>Optional</Divider>
-          <FormControl>
-            <FormLabel>First Name</FormLabel>
-            <Controller name='firstName' control={control} render={({ field }) => <Input {...field} />} />
-          </FormControl>
-          <FormControl>
-            <FormLabel>Last Name</FormLabel>
-            <Controller name='lastName' control={control} render={({ field }) => <Input {...field} />} />
-          </FormControl>
-          <FormControl>
-            <FormLabel>Country</FormLabel>
-            <Controller
-              name='country'
-              control={control}
-              render={({ field }) => (
-                <Select
-                  // {...field}
-                  color='neutral'
-                  disabled={false}
-                  placeholder='Choose Country…'
-                  variant='outlined'
-                >
-                  {generateOptionsFromEnumRHF(field)}
-                </Select>
-              )}
-            />
-          </FormControl>
-          <FormControl>
-            <FormLabel>Cell Phone</FormLabel>
-            <Controller
-              name='cellPhone'
-              control={control}
-              render={({ field }) => <Input {...field} placeholder='(555) 555-5555' />}
-            />
-          </FormControl>
           <CardActions buttonFlex={1} sx={{ gridColumn: '1/-1' }}>
             <Button variant='outlined' type='submit'>
               Submit
